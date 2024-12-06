@@ -20,40 +20,73 @@ referrer-policy-demo/
 └── README.md       # 說明文件
 ```
 
-## 使用方式
+## 重要概念
 
-1. 克隆此專案：
-```bash
-git clone https://github.com/your-username/referrer-policy-demo.git
+### Referrer 是什麼？
+
+HTTP Referer（注意拼寫中缺少一個 r）是一個 HTTP header，用於標識使用者是從哪個網頁連結過來的。當使用者點擊連結或提交表單時，瀏覽器會自動將當前頁面的 URL 作為 Referer 傳送給目標網站。
+
+```
+當使用者從 https://example.com/page1.html 點擊連結到 https://example.com/page2.html
+HTTP 請求會包含：
+Referer: https://example.com/page1.html
 ```
 
-2. 在瀏覽器中開啟 `index.html`
-3. 點擊不同的連結觀察 referrer 行為差異
+### 為什麼需要控制 Referrer？
 
-## 學習重點
+1. **隱私保護**
+   - 防止洩露敏感的 URL 參數
+   - 避免暴露內部系統結構
+   - 保護使用者瀏覽歷史
 
-1. **Referrer 基本概念**
-   - Referrer 是什麼
-   - 為什麼需要控制 Referrer
-   - 安全性考量
+2. **商業敏感資訊保護**
+   - 防止競爭對手分析流量來源
+   - 保護內部營銷活動資訊
+   - 避免暴露未公開的促銷連結
 
-2. **實作細節**
-   - 如何設定 `rel="noreferrer"`
-   - 如何讀取 `document.referrer`
-   - 不同連結設定的效果
+3. **跨域安全**
+   - 減少跨站請求偽造（CSRF）風險
+   - 控制第三方網站能獲取的資訊
 
-3. **應用場景**
-   - 保護使用者隱私
-   - 防止資訊洩漏
-   - SEO 考量
+### 安全性考量
 
-4. **GA4 流量追蹤觀察**
-   - 即使連結設定 `rel="noreferrer"`，GA4 仍能追蹤流量來源
-   - GA4 使用不同的追蹤機制（如 Client ID、Campaign Parameters）
-   - 流量來源報表中可觀察到完整的使用者路徑
-   - 實務上對資料分析的影響
+#### 潛在風險
+1. **URL 參數洩露**
+   ```
+   https://bank.com/account?id=12345&token=abc123
+   ```
+   - 若不控制 referrer，敏感參數可能洩露給第三方網站
 
-## 重要觀察
+2. **系統結構暴露**
+   ```
+   https://company.com/internal/admin/users
+   ```
+   - URL 結構可能暴露系統架構和權限層級
+
+3. **身分驗證資訊**
+   ```
+   https://app.com/dashboard?session=xyz789
+   ```
+   - 認證 token 可能經由 referrer 外洩
+
+#### 保護措施
+
+1. **頁面級別控制**
+   ```html
+   <meta name="referrer" content="no-referrer">
+   ```
+
+2. **連結級別控制**
+   ```html
+   <a href="..." rel="noreferrer">
+   ```
+
+3. **伺服器端配置**
+   ```apache
+   Referrer-Policy: no-referrer-when-downgrade
+   ```
+
+## GA4 流量追蹤觀察
 
 ### GA4 與 Referrer Policy 的關係
 - `rel="noreferrer"` 主要影響瀏覽器層級的 referrer 資訊傳遞
@@ -66,6 +99,33 @@ git clone https://github.com/your-username/referrer-policy-demo.git
   - 轉換路徑
   - 完整的使用者旅程
 
+## 使用方式
+
+1. 克隆此專案：
+```bash
+git clone https://github.com/your-username/referrer-policy-demo.git
+```
+
+2. 在瀏覽器中開啟 `index.html`
+3. 點擊不同的連結觀察 referrer 行為差異
+
+## 最佳實踐建議
+
+1. **敏感頁面**
+   - 一律使用 no-referrer policy
+   - 避免在 URL 中包含敏感資訊
+   - 實作適當的 CSRF 保護
+
+2. **一般頁面**
+   - 使用 same-origin 或 strict-origin policy
+   - 注意第三方連結的 referrer 控制
+   - 定期審查 referrer 相關設定
+
+3. **開發建議**
+   - 使用 POST 而非 GET 傳送敏感資料
+   - 實作適當的權限檢查機制
+   - 不依賴 referrer 作為安全控制
+
 ## 注意事項
 
 - 需要使用網頁伺服器來運行（直接開啟檔案可能無法正確顯示結果）
@@ -73,7 +133,3 @@ git clone https://github.com/your-username/referrer-policy-demo.git
 - 建議搭配瀏覽器的開發者工具觀察網路請求
 - 建議同時觀察 GA4 報表以了解實際追蹤效果
 
-
-## 授權條款
-
-MIT License - 請自由使用於教學或學習用途
