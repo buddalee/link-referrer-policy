@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Referrer Policy 示範</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .link-container {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Referrer Policy 示範頁面</h1>
+    
+    <div class="link-container">
+        <h3>一般連結 (預設會傳送 referrer)</h3>
+        <a href="result.html" target="_blank">點擊這裡 (有 referrer)</a>
+    </div>
+
+    <div class="link-container">
+        <h3>無 referrer 連結</h3>
+        <a href="result.html" rel="noreferrer" target="_blank">點擊這裡 (無 referrer)</a>
+    </div>
+
+    <script>
+        // 顯示當前頁面的網址，方便確認
+        document.write(`<div class="result">
+            <p>當前頁面網址: ${window.location.href}</p>
+        </div>`);
+    </script>
+</body>
+</html>

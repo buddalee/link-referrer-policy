@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Referrer 結果頁面</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .result {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Referrer 檢查結果</h1>
+    
+    <div class="result">
+        <h3>Referrer 資訊：</h3>
+        <script>
+            document.write(`<p>document.referrer: ${document.referrer || '無 referrer'}</p>`);
+        </script>
+    </div>
+
+    <button onclick="window.close()">關閉視窗</button>
+</body>
+</html>
